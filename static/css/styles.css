@@ -42,7 +42,7 @@ label {
 
 /* Input Styles */
 input {
-    margin-bottom: 15px;
+    margin-bottom: 3px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -75,4 +75,10 @@ button.secondary:hover {
 
 .full-width {
   width: 100%;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875em; /* Adjust size as needed */
+    margin-bottom: 0.75em;
 }

@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
 </head>
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form action="/login" method="post">
+        <form id="loginForm" action="/login" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
+            <div class="error-message"></div>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
+            <div class="error-message"></div>
+
+            <div id="formError" class="error-message"></div>
 
             <button type="submit">Login</button>
         </form>

@@ -6,54 +6,115 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="{{ url_for('static', filename='js/signup.js') }}" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        footer .names {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #555;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto;
+        }
+        .container h2 {
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Sign Up</h2>
-        <form id="signupForm" action="/signup" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <div class="error-message"></div>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <div class="error-message"></div>
 
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
-            <div class="error-message"></div>
+<header>
+    Online Course Registration Project
+</header>
 
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" required>
-            <div class="error-message"></div>
+<div class="container">
+    <h2>Sign Up</h2>
+    <form id="signupForm" action="/signup" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <div class="error-message"></div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <div class="error-message"></div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <div class="error-message"></div>
 
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone">
-            <div class="error-message"></div>
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required>
+        <div class="error-message"></div>
 
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address">
-            <div class="error-message"></div>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required>
+        <div class="error-message"></div>
 
-            <label for="city">City:</label>
-            <input type="text" id="city" name="city">
-            <div class="error-message"></div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <div class="error-message"></div>
 
-            <label for="state">State:</label>
-            <input type="text" id="state" name="state">
-            <div class="error-message"></div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone">
+        <div class="error-message"></div>
 
-            <label for="zip_code">Zip Code:</label>
-            <input type="text" id="zip_code" name="zip_code">
-            <div class="error-message"></div>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address">
+        <div class="error-message"></div>
 
-            <button type="submit">Sign Up</button>
-        </form>
-        <button class="secondary full-width" onclick="window.location.href='/login';">Login</button>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+        <div class="error-message"></div>
+
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state">
+        <div class="error-message"></div>
+
+        <label for="zip_code">Zip Code:</label>
+        <input type="text" id="zip_code" name="zip_code">
+        <div class="error-message"></div>
+
+        <button type="submit" class="full-width">Sign Up</button>
+        <button onclick="window.location.href='/login';" class="secondary full-width">Login</button>
+    </form>
+</div>
+
+<footer>
+    Online Course Registration Project 2024 - CMSC 495
+    <div class="names">
+        Shapiro, Brian / Murray, Brian / Angelozzi, Brian / Beatty, Sidney
     </div>
+</footer>
+
 </body>
 </html>

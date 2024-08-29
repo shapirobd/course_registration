@@ -6,24 +6,82 @@
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        footer .names {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #555;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            box-sizing: border-box;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Login</h2>
-        <form id="loginForm" action="/login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <div class="error-message"></div>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <div class="error-message"></div>
+<header>
+    Online Course Registration Project
+</header>
 
-            <div id="formError" class="error-message"></div>
+<div class="container">
+    <h2>Login</h2>
+    <form id="loginForm" action="/login" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <div class="error-message"></div>
 
-            <button type="submit">Login</button>
-        </form>
-        <button class="secondary full-width" onclick="window.location.href='/signup';">Sign Up</button>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <div class="error-message"></div>
+
+        <div id="formError" class="error-message"></div>
+
+        <button type="submit" class="full-width">Login</button>
+        <button onclick="window.location.href='/signup';" class="secondary full-width">Sign Up</button>
+    </form>
+</div>
+
+<footer>
+    Online Course Registration Project 2024 - CMSC 495
+    <div class="names">
+        Shapiro, Brian / Murray, Brian / Angelozzi, Brian / Beatty, Sidney
     </div>
+</footer>
+
 </body>
 </html>

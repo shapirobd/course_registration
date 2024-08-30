@@ -1,4 +1,3 @@
-# models.py
 import mysql.connector
 from mysql.connector import errorcode
 from db import db_config, get_db_connection
@@ -40,6 +39,7 @@ def add_user(data):
     finally:
         cursor.close()
         connection.close()
+
 
 # Find a user by username
 def find_user_by_username(username):

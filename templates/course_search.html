@@ -54,14 +54,14 @@
         document.getElementById('genEdTab').classList.remove('active');
         document.getElementById('majorTab').classList.remove('active');
         document.getElementById('electiveTab').classList.remove('active');
-        
+
         // Activate the selected tab
         document.getElementById(tab + 'Tab').classList.add('active');
-        
+
         // Update progress bar based on the selected tab (example logic)
         let completedCredits = 0;
         let requiredCredits = 18;
-        
+
         if (tab === 'genEd') {
             completedCredits = 12; // Example value
         } else if (tab === 'major') {
@@ -69,14 +69,14 @@
         } else if (tab === 'elective') {
             completedCredits = 15; // Example value
         }
-        
+
         const progressBar = document.getElementById('progressBar');
         const progressBarText = document.getElementById('progressBarText');
         const percentage = (completedCredits / requiredCredits) * 100;
-        
+
         progressBar.style.width = percentage + '%';
         progressBarText.innerText = completedCredits + '/' + requiredCredits + ' Credits Completed';
-        
+
         // Check if the required credits are completed
         if (completedCredits >= requiredCredits) {
             document.getElementById('courseList').style.display = 'none';
@@ -92,20 +92,20 @@
         // Example search function - implement actual search logic here
         const term = document.getElementById('termSelect').value;
         const courseList = document.getElementById('courseList');
-        
+
         // Clear previous search results
         courseList.innerHTML = '';
-        
+
         // Example courses based on the selected term and active tab
         let courses = [];
         const activeTab = document.querySelector('.tab.active').id;
-        
+
         if (term === 'spring2025' && activeTab === 'genEdTab') {
             courses = ['World History', 'Mathematics II'];
         } else if (term === 'fall2024' && activeTab === 'majorTab') {
             courses = ['Data Structures', 'Operating Systems'];
         }
-        
+
         if (courses.length > 0) {
             courses.forEach(course => {
                 const courseItem = document.createElement('div');

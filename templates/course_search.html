@@ -16,7 +16,7 @@
 <div class="progress-bar-container">
     <div id="progressBarText">12/18 Credits Completed</div>
     <div class="progress-bar">
-        <div class="progress" id="progressBar"></div>
+        <div class="progress" id="progressBar" style="width: 66%;"></div>
     </div>
 </div>
 
@@ -40,4 +40,73 @@
     <!-- If no courses are available -->
     <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
 </div>
+
+<script>
+    function selectTab(tab) {
+        document.getElementById('genEdTab').classList.remove('active');
+        document.getElementById('majorTab').classList.remove('active');
+        document.getElementById('electiveTab').classList.remove('active');
+        document.getElementById(tab + 'Tab').classList.add('active');
+
+        let completedCredits = 0;
+        let requiredCredits = 18;
+
+        if (tab === 'genEd') {
+            completedCredits = 12;
+        } else if (tab === 'major') {
+            completedCredits = 8;
+        } else if (tab === 'elective') {
+            completedCredits = 15;
+        }
+
+        const progressBar = document.getElementById('progressBar');
+        const progressBarText = document.getElementById('progressBarText');
+        const percentage = (completedCredits / requiredCredits) * 100;
+
+        progressBar.style.width = percentage + '%';
+        progressBarText.innerText = completedCredits + '/' + requiredCredits + ' Credits Completed';
+
+        if (completedCredits >= requiredCredits) {
+            document.getElementById('courseList').style.display = 'none';
+            document.getElementById('noCoursesText').style.display = 'block';
+            document.getElementById('noCoursesText').innerText = 'All credits for this course type are completed.';
+        } else {
+            document.getElementById('courseList').style.display = 'block';
+            document.getElementById('noCoursesText').style.display = 'none';
+        }
+    }
+
+    function searchCourses() {
+        const term = document.getElementById('termSelect').value;
+        const courseList = document.getElementById('courseList');
+
+        courseList.innerHTML = '';
+
+        let courses = [];
+        const activeTab = document.querySelector('.tab.active').id;
+
+        if (term === 'spring2025' && activeTab === 'genEdTab') {
+            courses = ['World History', 'Mathematics II'];
+        } else if (term === 'fall2024' && activeTab === 'majorTab') {
+            courses = ['Data Structures', 'Operating Systems'];
+        }
+
+        if (courses.length > 0) {
+            courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.className = 'course-item';
+                courseItem.innerHTML = `<span>${course}</span><button onclick="registerCourse('${course}')">Register</button>`;
+                courseList.appendChild(courseItem);
+            });
+            document.getElementById('noCoursesText').style.display = 'none';
+        } else {
+            document.getElementById('noCoursesText').style.display = 'block';
+            document.getElementById('noCoursesText').innerText = 'No courses available for this semester.';
+        }
+    }
+
+    function registerCourse(course) {
+        alert(`Registered for ${course}`);
+    }
+</script>
 {% endblock %}

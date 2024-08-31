@@ -15,7 +15,6 @@
     <!-- Placeholder text -->
     <p id="noSelectionText" class="placeholder">No course types are selected</p>
 
-    <!-- Example, will link to registered courses in database -->
     <div class="semester" id="semester1">
         <h3>Fall 2024</h3>
         <div class="course-item" data-type="major">Introduction to Programming</div>
@@ -29,4 +28,34 @@
         <div class="course-item" data-type="genEd">Mathematics II</div>
     </div>
 </div>
+
+<script>
+    function filterCourses() {
+        const genEdCheckbox = document.getElementById('generalEducation').checked;
+        const majorCheckbox = document.getElementById('majorCoursework').checked;
+        const electiveCheckbox = document.getElementById('generalElective').checked;
+
+        const courses = document.querySelectorAll('.course-item');
+        let hasSelection = false;
+
+        courses.forEach(course => {
+            course.style.display = 'none';
+            const courseType = course.getAttribute('data-type');
+
+            if ((genEdCheckbox && courseType === 'genEd') ||
+                (majorCheckbox && courseType === 'major') ||
+                (electiveCheckbox && courseType === 'elective')) {
+                course.style.display = '';
+                hasSelection = true;
+            }
+        });
+
+        const noSelectionText = document.getElementById('noSelectionText');
+        if (hasSelection) {
+            noSelectionText.style.display = 'none';
+        } else {
+            noSelectionText.style.display = 'block';
+        }
+    }
+</script>
 {% endblock %}

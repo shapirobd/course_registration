@@ -14,31 +14,37 @@
             height: 100vh;
         }
         header {
-            text-align: center;
             padding: 20px;
             background-color: #f4f4f4;
             font-size: 24px;
             font-weight: bold;
             margin-left: 220px;
             margin-right: 0;
+            text-align: center;
+            box-sizing: border-box;
         }
         .container {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
             margin: 20px auto;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             overflow-y: auto;
+            max-width: calc(100% - 260px);
+            margin-left: 240px;
         }
         .container h2 {
             margin-top: 0;
-            align-self: center;
+            width: 100%;
+            padding: 10px;
+            background-color: #f4f4f4;
+            text-align: center;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
         .tabs {
             display: flex;

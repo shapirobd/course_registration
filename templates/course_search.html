@@ -3,48 +3,46 @@
 {% block title %}Search for Courses{% endblock %}
 
 {% block content %}
-<div class="main-content" style="display: flex; justify-content: center;">
-    <div class="content-container" style="flex: 1; padding: 20px; max-width: 800px;">
-        <h2>Search for Courses</h2>
+<div class="container">
+    <h2>Search for Courses</h2>
 
-        <!-- Tabs for course types -->
-        <div class="tabs">
-            <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
-            <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
-            <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
+    <!-- Tabs for course types -->
+    <div class="tabs">
+        <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
+        <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
+        <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-container">
+        <div id="progressBarText">12/18 Credits Completed</div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
         </div>
+    </div>
 
-        <!-- Progress bar -->
-        <div class="progress-bar-container">
-            <div id="progressBarText">12/18 Credits Completed</div>
-            <div class="progress-bar">
-                <div class="progress" id="progressBar"></div>
-            </div>
+    <!-- Semester/Term selection -->
+    <div class="semester-select">
+        <select id="termSelect">
+            <option value="spring2025">Spring 2025</option>
+            <option value="fall2024">Fall 2024</option>
+            <!-- Add more options as needed -->
+        </select>
+    </div>
+
+    <!-- Search button -->
+    <button onclick="searchCourses()">Search</button>
+
+    <!-- List of available courses -->
+    <div id="courseList" class="course-list">
+        <!-- Example of a course item -->
+        <!-- This will be dynamically generated -->
+        <div class="course-item">
+            <span>Introduction to Programming</span>
+            <button onclick="registerCourse('Introduction to Programming')">Register</button>
         </div>
-
-        <!-- Semester/Term selection -->
-        <div class="semester-select">
-            <select id="termSelect">
-                <option value="spring2025">Spring 2025</option>
-                <option value="fall2024">Fall 2024</option>
-                <!-- Add more options as needed -->
-            </select>
-        </div>
-
-        <!-- Search button -->
-        <button onclick="searchCourses()">Search</button>
-
-        <!-- List of available courses -->
-        <div id="courseList" class="course-list">
-            <!-- Example of a course item -->
-            <!-- This will be dynamically generated -->
-            <div class="course-item">
-                <span>Introduction to Programming</span>
-                <button onclick="registerCourse('Introduction to Programming')">Register</button>
-            </div>
-            <!-- If no courses are available -->
-            <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
-        </div>
+        <!-- If no courses are available -->
+        <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
     </div>
 </div>
 

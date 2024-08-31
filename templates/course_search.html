@@ -2,138 +2,6 @@
 
 {% block title %}Search for Courses{% endblock %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-<script src="{{ url_for('static', filename='js/course_search.js') }}" defer></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        header {
-            text-align: center;
-            padding: 20px;
-            background-color: #f4f4f4;
-            font-size: 24px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #f4f4f4;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        footer .names {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #555;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            overflow-y: auto;
-        }
-        .container h2 {
-            margin-top: 0;
-            align-self: center;
-        }
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            cursor: pointer;
-        }
-        .tab.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-        .progress-bar-container {
-            width: 100%;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .progress-bar {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress {
-            height: 20px;
-            background-color: #007bff;
-            width: 50%; /* Example width, this will be dynamically updated */
-            text-align: center;
-            color: white;
-            line-height: 20px;
-        }
-        .course-list {
-            width: 100%;
-            margin-top: 20px;
-        }
-        .course-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .course-item button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .course-item button:hover {
-            background-color: #0056b3;
-        }
-        .semester-select {
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .semester-select select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        .no-courses {
-            text-align: center;
-            color: #888;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-{% endblock %}
-
 {% block content %}
 <div class="container">
     <h2>Search for Courses</h2>
@@ -174,25 +42,26 @@
             <button onclick="registerCourse('Introduction to Programming')">Register</button>
         </div>
         <!-- If no courses are available -->
-        <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
+        <p id="noCoursesText" class="no-courses" style="display: none;">No courses available for this semester.</p>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-    // JavaScript to manage tab selection, progress bar update, and course search
     function selectTab(tab) {
         // Reset all tabs to inactive
         document.getElementById('genEdTab').classList.remove('active');
         document.getElementById('majorTab').classList.remove('active');
         document.getElementById('electiveTab').classList.remove('active');
-
+        
         // Activate the selected tab
         document.getElementById(tab + 'Tab').classList.add('active');
-
+        
         // Update progress bar based on the selected tab (example logic)
         let completedCredits = 0;
         let requiredCredits = 18;
-
+        
         if (tab === 'genEd') {
             completedCredits = 12; // Example value
         } else if (tab === 'major') {
@@ -200,14 +69,14 @@
         } else if (tab === 'elective') {
             completedCredits = 15; // Example value
         }
-
+        
         const progressBar = document.getElementById('progressBar');
         const progressBarText = document.getElementById('progressBarText');
         const percentage = (completedCredits / requiredCredits) * 100;
-
+        
         progressBar.style.width = percentage + '%';
         progressBarText.innerText = completedCredits + '/' + requiredCredits + ' Credits Completed';
-
+        
         // Check if the required credits are completed
         if (completedCredits >= requiredCredits) {
             document.getElementById('courseList').style.display = 'none';
@@ -223,20 +92,20 @@
         // Example search function - implement actual search logic here
         const term = document.getElementById('termSelect').value;
         const courseList = document.getElementById('courseList');
-
+        
         // Clear previous search results
         courseList.innerHTML = '';
-
+        
         // Example courses based on the selected term and active tab
         let courses = [];
         const activeTab = document.querySelector('.tab.active').id;
-
+        
         if (term === 'spring2025' && activeTab === 'genEdTab') {
             courses = ['World History', 'Mathematics II'];
         } else if (term === 'fall2024' && activeTab === 'majorTab') {
             courses = ['Data Structures', 'Operating Systems'];
         }
-
+        
         if (courses.length > 0) {
             courses.forEach(course => {
                 const courseItem = document.createElement('div');
@@ -255,5 +124,10 @@
         // Example register function - implement actual registration logic here
         alert(`Registered for ${course}`);
     }
+
+    // Initialize the default tab and progress bar on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        selectTab('genEd');  // Set the initial active tab to General Education
+    });
 </script>
 {% endblock %}

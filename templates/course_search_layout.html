@@ -39,7 +39,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 600px;
+            max-width: 1000px;
             margin: 20px auto;
             box-sizing: border-box;
             display: flex;
@@ -138,7 +138,6 @@
 </header>
 
 <div class="container">
-
     <!-- Tabs for course types -->
     <div class="tabs">
         <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
@@ -167,11 +166,15 @@
 
     <!-- List of available courses -->
     <div id="courseList" class="course-list">
-        <!-- The course list will be dynamically generated here -->
+        <!-- Example of a course item -->
+        <!-- This will be dynamically generated -->
+        <div class="course-item">
+            <span>Introduction to Programming</span>
+            <button onclick="registerCourse('Introduction to Programming')">Register</button>
+        </div>
+        <!-- If no courses are available -->
+        <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
     </div>
-
-    <!-- Placeholder for when no courses are available -->
-    <p id="noCoursesText" class="no-courses" style="display: none;">No courses available for this semester.</p>
 </div>
 
 <script>
@@ -251,11 +254,6 @@
         // Example register function
         alert(`Registered for ${course}`);
     }
-        document.addEventListener('DOMContentLoaded', function() {
-        selectTab('genEd');  // Set the initial active tab to General Education
-        document.getElementById('courseList').innerHTML = '';  // Clear the course list on page load
-        document.getElementById('noCoursesText').style.display = 'none';  // Hide the "No courses available" message on load
-    });
 </script>
 
 </body>

@@ -3,60 +3,72 @@
 {% block title %}Search for Courses{% endblock %}
 
 {% block content %}
-<h2>Search for Courses</h2>
+<div class="main-content" style="display: flex; justify-content: center;">
+    <div class="content-container" style="flex: 1; padding: 20px; max-width: 800px;">
+        <h2>Search for Courses</h2>
 
-<!-- Tabs for course types -->
-<div class="tabs">
-    <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
-    <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
-    <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
-</div>
+        <!-- Tabs for course types -->
+        <div class="tabs">
+            <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
+            <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
+            <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
+        </div>
 
-<!-- Progress bar -->
-<div class="progress-bar-container">
-    <div id="progressBarText">12/18 Credits Completed</div>
-    <div class="progress-bar">
-        <div class="progress" id="progressBar" style="width: 66%;"></div>
+        <!-- Progress bar -->
+        <div class="progress-bar-container">
+            <div id="progressBarText">12/18 Credits Completed</div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Semester/Term selection -->
+        <div class="semester-select">
+            <select id="termSelect">
+                <option value="spring2025">Spring 2025</option>
+                <option value="fall2024">Fall 2024</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+
+        <!-- Search button -->
+        <button onclick="searchCourses()">Search</button>
+
+        <!-- List of available courses -->
+        <div id="courseList" class="course-list">
+            <!-- Example of a course item -->
+            <!-- This will be dynamically generated -->
+            <div class="course-item">
+                <span>Introduction to Programming</span>
+                <button onclick="registerCourse('Introduction to Programming')">Register</button>
+            </div>
+            <!-- If no courses are available -->
+            <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
+        </div>
     </div>
-</div>
-
-<!-- Semester/Term selection -->
-<div class="semester-select">
-    <select id="termSelect">
-        <option value="spring2025">Spring 2025</option>
-        <option value="fall2024">Fall 2024</option>
-    </select>
-</div>
-
-<!-- Search button -->
-<button onclick="searchCourses()">Search</button>
-
-<!-- List of available courses -->
-<div id="courseList" class="course-list">
-    <div class="course-item">
-        <span>Introduction to Programming</span>
-        <button onclick="registerCourse('Introduction to Programming')">Register</button>
-    </div>
-    <!-- If no courses are available -->
-    <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
 </div>
 
 <script>
+    // JavaScript to manage tab selection, progress bar update, and course search
     function selectTab(tab) {
+        // Reset all tabs to inactive
         document.getElementById('genEdTab').classList.remove('active');
         document.getElementById('majorTab').classList.remove('active');
         document.getElementById('electiveTab').classList.remove('active');
+
+        // Activate the selected tab
         document.getElementById(tab + 'Tab').classList.add('active');
 
+        // Update progress bar based on the selected tab (example logic)
         let completedCredits = 0;
         let requiredCredits = 18;
 
         if (tab === 'genEd') {
-            completedCredits = 12;
+            completedCredits = 12; // Example value
         } else if (tab === 'major') {
-            completedCredits = 8;
+            completedCredits = 8;  // Example value
         } else if (tab === 'elective') {
-            completedCredits = 15;
+            completedCredits = 15; // Example value
         }
 
         const progressBar = document.getElementById('progressBar');
@@ -66,6 +78,7 @@
         progressBar.style.width = percentage + '%';
         progressBarText.innerText = completedCredits + '/' + requiredCredits + ' Credits Completed';
 
+        // Check if the required credits are completed
         if (completedCredits >= requiredCredits) {
             document.getElementById('courseList').style.display = 'none';
             document.getElementById('noCoursesText').style.display = 'block';
@@ -77,11 +90,14 @@
     }
 
     function searchCourses() {
+        // Example search function - implement actual search logic here
         const term = document.getElementById('termSelect').value;
         const courseList = document.getElementById('courseList');
 
+        // Clear previous search results
         courseList.innerHTML = '';
 
+        // Example courses based on the selected term and active tab
         let courses = [];
         const activeTab = document.querySelector('.tab.active').id;
 
@@ -106,6 +122,7 @@
     }
 
     function registerCourse(course) {
+        // Example register function - implement actual registration logic here
         alert(`Registered for ${course}`);
     }
 </script>

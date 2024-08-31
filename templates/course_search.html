@@ -7,10 +7,10 @@
     <h2>Search for Courses</h2>
 
     <!-- Tabs for course types -->
-    <div class="tabs">
-        <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
-        <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
-        <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
+    <div class="checkbox-group">
+        <label><input type="checkbox" id="generalEducation" onclick="filterCourses()"> General Education</label>
+        <label><input type="checkbox" id="majorCoursework" onclick="filterCourses()"> Major Coursework</label>
+        <label><input type="checkbox" id="generalElective" onclick="filterCourses()"> General Elective</label>
     </div>
 
     <!-- Progress bar -->
@@ -26,7 +26,6 @@
         <select id="termSelect">
             <option value="spring2025">Spring 2025</option>
             <option value="fall2024">Fall 2024</option>
-            <!-- Add more options as needed -->
         </select>
     </div>
 
@@ -45,9 +44,7 @@
         <p id="noCoursesText" class="no-courses" style="display: none;">No courses available for this semester.</p>
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
 <script>
     function selectTab(tab) {
         // Reset all tabs to inactive

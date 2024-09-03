@@ -117,7 +117,7 @@ def doLogin():
     except Exception as ex:
         # Catch all other exceptions
         print(f"An error occurred: {ex}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+        return jsonify({"error": f"An error occurred: {ex}"}), 500
 
 
 @app.route('/login', methods=['GET'])

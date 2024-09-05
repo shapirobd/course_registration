@@ -6,49 +6,55 @@
 <div class="main-content" style="display: flex; flex-direction: column; align-items: center;">
     <h2>{{ student_name }}'s Profile</h2>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <!-- Username and Email Pair -->
+    <div class="field-pair">
         <label for="username">Username:</label>
         <label for="email">Email:</label>
     </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <div class="field-pair">
         <p id="username">{{ username }}</p>
         <p id="email">{{ email }}</p>
     </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <!-- First Name and Last Name Pair -->
+    <div class="field-pair">
         <label for="first_name">First Name:</label>
         <label for="last_name">Last Name:</label>
     </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <div class="field-pair">
         <p id="first_name">{{ first_name }}</p>
         <p id="last_name">{{ last_name }}</p>
     </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <!-- Phone -->
+    <div class="field-single">
         <label for="phone">Phone:</label>
     </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <div class="field-single">
         <p id="phone">{{ phone }}</p>
     </div>
 
-    <div class="field-group" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <!-- Address, City, State Group -->
+    <div class="field-group">
         <label for="address">Address:</label>
         <label for="city">City:</label>
         <label for="state">State:</label>
     </div>
-    <div class="field-group" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <div class="field-group">
         <p id="address">{{ address }}</p>
         <p id="city">{{ city }}</p>
         <p id="state">{{ state }}</p>
     </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <!-- Zip Code -->
+    <div class="field-single">
         <label for="zip_code">Zip Code:</label>
     </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
+    <div class="field-single">
         <p id="zip_code">{{ zip_code }}</p>
     </div>
 
-    <button onclick="window.location.href='/change_password';" style="width: 100%; max-width: 500px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Change Password</button>
+    <!-- Change Password Button -->
+    <button onclick="window.location.href='/change_password';" class="profile-btn">Change Password</button>
 </div>
 {% endblock %}

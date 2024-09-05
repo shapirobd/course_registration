@@ -142,8 +142,7 @@ def signup():
 @app.route('/')
 @login_required
 def home():
-    # registered_courses = courses.get_registered_courses(session['next_semester_id'], session['student_id'])
-    return render_template('registered_courses.html')
+    return render_template('home.html')
 
 
 @app.route('/course_search')
@@ -163,7 +162,11 @@ def course_search():
 def search_courses():
     return courses.search_courses(session['next_semester_id'], session['student_id'])
 
-
+@app.route('/registered_courses')
+@login_required
+def registered_courses():
+    return render_template('registered_courses.html')
+    
 @app.route('/register_for_course', methods=['POST'])
 @login_required
 def register_for_course():

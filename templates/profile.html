@@ -6,49 +6,58 @@
 <div class="main-content" style="display: flex; flex-direction: column; align-items: center;">
     <h2>{{ student_name }}'s Profile</h2>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <label for="username">Username:</label>
-        <label for="email">Email:</label>
-    </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <p id="username">{{ username }}</p>
-        <p id="email">{{ email }}</p>
-    </div>
+    <form method="POST" action="/update_profile" style="width: 100%; max-width: 600px;">
+        <!-- Username (locked/uneditable) -->
+        <div class="field-pair">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ username }}" readonly>
+        </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <label for="first_name">First Name:</label>
-        <label for="last_name">Last Name:</label>
-    </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <p id="first_name">{{ first_name }}</p>
-        <p id="last_name">{{ last_name }}</p>
-    </div>
+        <!-- Email -->
+        <div class="field-pair">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ email }}" required>
+        </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <label for="phone">Phone:</label>
-    </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <p id="phone">{{ phone }}</p>
-    </div>
+        <!-- First Name and Last Name -->
+        <div class="field-pair">
+            <label for="first_name">First Name:</label>
+            <label for="last_name">Last Name:</label>
+        </div>
+        <div class="field-pair">
+            <input type="text" id="first_name" name="first_name" value="{{ first_name }}" required>
+            <input type="text" id="last_name" name="last_name" value="{{ last_name }}" required>
+        </div>
 
-    <div class="field-group" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <label for="address">Address:</label>
-        <label for="city">City:</label>
-        <label for="state">State:</label>
-    </div>
-    <div class="field-group" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <p id="address">{{ address }}</p>
-        <p id="city">{{ city }}</p>
-        <p id="state">{{ state }}</p>
-    </div>
+        <!-- Phone -->
+        <div class="field-single">
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="{{ phone }}">
+        </div>
 
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <label for="zip_code">Zip Code:</label>
-    </div>
-    <div class="field-pair" style="margin-bottom: 20px; display: flex; justify-content: space-between; width: 100%; max-width: 500px;">
-        <p id="zip_code">{{ zip_code }}</p>
-    </div>
+        <!-- Address, City, State -->
+        <div class="field-group">
+            <label for="address">Address:</label>
+            <label for="city">City:</label>
+            <label for="state">State:</label>
+        </div>
+        <div class="field-group">
+            <input type="text" id="address" name="address" value="{{ address }}">
+            <input type="text" id="city" name="city" value="{{ city }}">
+            <input type="text" id="state" name="state" value="{{ state }}">
+        </div>
 
-    <button onclick="window.location.href='/change_password';" style="width: 100%; max-width: 500px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Change Password</button>
+        <!-- Zip Code -->
+        <div class="field-single">
+            <label for="zip_code">Zip Code:</label>
+            <input type="text" id="zip_code" name="zip_code" value="{{ zip_code }}">
+        </div>
+
+        <!-- Change Password -->
+        <button type="button" onclick="window.location.href='/change_password';" class="profile-btn">Change Password</button>
+
+        <!-- Save Changes Button -->
+        <button type="submit" class="profile-btn">Save Changes</button>
+    </form>
 </div>
 {% endblock %}

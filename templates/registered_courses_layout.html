@@ -79,6 +79,9 @@
         .drop-btn:hover {
             background-color: #d00;
         }
+        .no-registered-courses {
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -96,34 +99,29 @@
     </div>
 
     <div id="courseList" class="course-list">
+        {% set semester_course_counter = { semesters[0]['id']: 0, semesters[1]['id']: 0 } %}
         {% for semester in semesters %}
             <!-- Example of how courses will be displayed by semester -->
             <div class="semester" id="semester_{{semester.id}}">
                 <h3>{{semester.season}} {{semester.year}}</h3>
                 <hr />
-                {% if not registered_courses %}
-                    <div>No registered courses</div>
-                {% endif %}
 
                 {% for course in registered_courses if course["season"] == semester["season"] and course["year"] == semester["year"] %}
                     <div id="course_{{course['id']}}" class="course-item" data-type="{{ course.course_type }}">
                         {{course.course_name}}
                         <button id="drop_course_{{course['id']}}" class="drop-btn" onclick="dropCourse({{course['id']}})">Drop</button>
                     </div>
-                    {# <div class="course-item" data-type="genEd">World History</div>
-                    <div class="course-item" data-type="elective">Creative Writing</div> #}
-                 {% endfor %}
+                    {% if semester_course_counter.update({semester["id"]: semester_course_counter[semester["id"]] + 1}) %} {% endif %}
+                {% endfor %}
+
+                {% if semester_course_counter[semester["id"]] == 0 %}
+                    <div class="no-registered-courses"><i>No registered courses</i></div>
+                {% endif %}
             </div>
         {% endfor %}
 
         <!-- Placeholder text -->
         <p id="noSelectionText" class="placeholder">No course types are selected</p>
-
-        {# <div class="semester" id="semester2">
-            <h3>Spring 2025</h3>
-            <div class="course-item" data-type="major">Data Structures</div>
-            <div class="course-item" data-type="genEd">Mathematics II</div>
-        </div> #}
     </div>
 
 </div>
@@ -153,8 +151,10 @@
         const noSelectionText = document.getElementById('noSelectionText');
         if (hasSelection) {
             noSelectionText.style.display = 'none';  // Hide the placeholder text
+            jQuery('.semester').show();
         } else {
             noSelectionText.style.display = 'block';  // Show the placeholder text
+            jQuery('.semester').hide();
         }
     }
 

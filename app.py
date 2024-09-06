@@ -145,7 +145,7 @@ def signup():
 @app.route('/')
 @login_required
 def home():
-    return render_template('home.html')
+    return render_template('home.html', selected_nav_link='home')
 
 
 @app.route('/course_search')
@@ -155,7 +155,7 @@ def course_search():
     completed_credits = courses.get_completed_credits(session['next_semester_id'], session['student_id'])
     print(f'completed_credits = {completed_credits}')
     major = courses.get_major(session['student_id'])
-    return render_template('course_search.html', semester=semester, completed_credits=completed_credits, major=major)
+    return render_template('course_search.html', semester=semester, completed_credits=completed_credits, major=major, selected_nav_link="course_search")
 
 
 # @app.route('/get_completed_credits')
@@ -171,7 +171,7 @@ def registered_courses():
     registered_courses = courses.get_registered_courses(session['next_semester_id'], session['student_id'])
     semesters = courses.get_semester_details([session['next_semester_id'] - 1, session['next_semester_id']])
     print(f'semesters = {semesters}')
-    return render_template('registered_courses.html', registered_courses=registered_courses, semesters=semesters)
+    return render_template('registered_courses.html', registered_courses=registered_courses, semesters=semesters, selected_nav_link='registered_courses')
 
 
 @app.route('/search_courses')
@@ -206,7 +206,7 @@ def drop_course():
 @login_required
 def profile():
     user = users.find_user_by_username(session['username'])
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=user, selected_nav_link="profile")
 
 
 @app.route('/logout', methods=['POST'])

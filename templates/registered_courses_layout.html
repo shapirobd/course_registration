@@ -57,12 +57,27 @@
             margin-bottom: 10px;
         }
         .course-item {
-            margin-bottom: 5px;
+            margin-bottom: 15px;
+            width: 100%;
+            position: relative;
         }
         .placeholder {
             text-align: center;
             color: #888;
             font-size: 16px;
+        }
+        .drop-btn {
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            position: absolute;
+            right: 0;
+        }
+        .drop-btn:hover {
+            background-color: #d00;
         }
     </style>
 </head>
@@ -81,22 +96,34 @@
     </div>
 
     <div id="courseList" class="course-list">
+        {% for semester in semesters %}
+            <!-- Example of how courses will be displayed by semester -->
+            <div class="semester" id="semester_{{semester.id}}">
+                <h3>{{semester.season}} {{semester.year}}</h3>
+                <hr />
+                {% if not registered_courses %}
+                    <div>No registered courses</div>
+                {% endif %}
+
+                {% for course in registered_courses if course["season"] == semester["season"] and course["year"] == semester["year"] %}
+                    <div id="course_{{course['id']}}" class="course-item" data-type="{{ course.course_type }}">
+                        {{course.course_name}}
+                        <button id="drop_course_{{course['id']}}" class="drop-btn" onclick="dropCourse({{course['id']}})">Drop</button>
+                    </div>
+                    {# <div class="course-item" data-type="genEd">World History</div>
+                    <div class="course-item" data-type="elective">Creative Writing</div> #}
+                 {% endfor %}
+            </div>
+        {% endfor %}
+
         <!-- Placeholder text -->
         <p id="noSelectionText" class="placeholder">No course types are selected</p>
 
-        <!-- Example of how courses will be displayed by semester -->
-        <div class="semester" id="semester1">
-            <h3>Fall 2024</h3>
-            <div class="course-item" data-type="major">Introduction to Programming</div>
-            <div class="course-item" data-type="genEd">World History</div>
-            <div class="course-item" data-type="elective">Creative Writing</div>
-        </div>
-
-        <div class="semester" id="semester2">
+        {# <div class="semester" id="semester2">
             <h3>Spring 2025</h3>
             <div class="course-item" data-type="major">Data Structures</div>
             <div class="course-item" data-type="genEd">Mathematics II</div>
-        </div>
+        </div> #}
     </div>
 
 </div>
@@ -114,9 +141,10 @@
             course.style.display = 'none';  // Hide all courses initially
             const courseType = course.getAttribute('data-type');
 
-            if ((genEdCheckbox && courseType === 'genEd') ||
-                (majorCheckbox && courseType === 'major') ||
-                (electiveCheckbox && courseType === 'elective')) {
+            if ((genEdCheckbox && courseType === '1') ||
+                (electiveCheckbox && courseType === '2') || 
+                (majorCheckbox && courseType === '3')
+            ) {
                 course.style.display = '';  // Show courses that match the selected type
                 hasSelection = true;
             }
@@ -128,6 +156,28 @@
         } else {
             noSelectionText.style.display = 'block';  // Show the placeholder text
         }
+    }
+
+    function dropCourse(course_id) {
+        const data = { course_id }
+        console.log('course_id = ' + course_id)
+
+        jQuery.ajax({
+            url: "/drop_course",
+            method: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function(course) {
+                console.log(course)
+                alert(`Successfully dropped ${course.course_name}`)
+                jQuery('#course_' + course_id).remove()
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                $("#result").text("Error: " + error);
+            }
+        })
     }
 
     document.addEventListener('DOMContentLoaded', function() {

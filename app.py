@@ -38,6 +38,7 @@ def doSignup():
             'password': bcrypt.generate_password_hash(request.form.get('password')).decode('utf-8'),
             'first_name': request.form.get('first_name'),
             'last_name': request.form.get('last_name'),
+            'major_id': request.form.get('major'),
             'email': request.form.get('email'),
             'phone': request.form.get('phone'),
             'address': request.form.get('address'),
@@ -59,7 +60,7 @@ def doSignup():
         session['username'] = user_data['username']
         session['student_id'] = user[0]
         session['next_semester_id'] = courses.get_next_semester()
-        print(f"session['user'] = {session['user']}")
+        print(f"session['username'] = {session['username']}")
         return redirect('/')
         # return jsonify({"message": "User created successfully"}), 201
 
@@ -131,7 +132,9 @@ def login():
 def signup():
     if 'username' in session:
         return redirect('/')
-    return render_template('signup.html')
+    majors = courses.get_majors()
+    print(f'majors = {majors}')
+    return render_template('signup.html', majors=majors)
 
 # @app.route('/')
 # @login_required
@@ -148,36 +151,54 @@ def home():
 @app.route('/course_search')
 @login_required
 def course_search():
-    return render_template('course_search.html')
+    semester = courses.get_semester_details([session['next_semester_id']])[0]
+    completed_credits = courses.get_completed_credits(session['next_semester_id'], session['student_id'])
+    print(f'completed_credits = {completed_credits}')
+    major = courses.get_major(session['student_id'])
+    return render_template('course_search.html', semester=semester, completed_credits=completed_credits, major=major)
 
 
-# @app.route('/get_registered_courses')
+# @app.route('/get_completed_credits')
 # @login_required
-# def get_registered_courses():
-#     return courses.get_registered_courses(session['next_semester_id'], session['student_id'])
+# def get_completed_credits():
+#     completed_courses = courses.get_completed_courses(session['next_semester_id'], session['student_id'])
+#     return completed_credits
+
+
+@app.route('/registered_courses')
+@login_required
+def registered_courses():
+    registered_courses = courses.get_registered_courses(session['next_semester_id'], session['student_id'])
+    semesters = courses.get_semester_details([session['next_semester_id'] - 1, session['next_semester_id']])
+    print(f'semesters = {semesters}')
+    return render_template('registered_courses.html', registered_courses=registered_courses, semesters=semesters)
 
 
 @app.route('/search_courses')
 @login_required
 def search_courses():
-    return courses.search_courses(session['next_semester_id'], session['student_id'])
+    course_type = request.args.get('course_type')
+    return courses.search_courses(session['next_semester_id'], session['student_id'], course_type)
 
-@app.route('/registered_courses')
-@login_required
-def registered_courses():
-    return render_template('registered_courses.html')
+# @app.route('/registered_courses')
+# @login_required
+# def registered_courses():
+#     return render_template('registered_courses.html')
     
 @app.route('/register_for_course', methods=['POST'])
 @login_required
 def register_for_course():
-    course_id = request.form.get('course_id')
+    data = request.get_json()
+    course_id = data.get('course_id')
+    print(f'course_id = {course_id}')
     return courses.register_for_course(session['next_semester_id'], session['student_id'], course_id)
 
 
 @app.route('/drop_course', methods=['POST'])
 @login_required
 def drop_course():
-    course_id = request.form.get('course_id')
+    data = request.get_json()
+    course_id = data.get('course_id')
     return courses.drop_course(session['next_semester_id'], session['student_id'], course_id)
 
 
@@ -185,7 +206,7 @@ def drop_course():
 @login_required
 def profile():
     user = users.find_user_by_username(session['username'])
-    return render_template('profile.html')
+    return render_template('profile.html', user=user)
 
 
 @app.route('/logout', methods=['POST'])

@@ -80,6 +80,15 @@
         <input type="text" id="last_name" name="last_name" required>
         <div class="error-message"></div>
 
+        <label for="major">Major:</label>
+        <select id="major" name="major" required>
+            <option value="">Select a major...</option>
+            {% for major in majors %}
+                <option value="{{ major.id }}">{{ major.major_name }}</option>
+            {% endfor %}
+        </select>
+        <div class="error-message"></div>
+
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <div class="error-message"></div>

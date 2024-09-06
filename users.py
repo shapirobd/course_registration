@@ -21,6 +21,7 @@ def add_user(data):
         print(f'password = {data['password']}')
         print(f'first_name = {data['first_name']}')
         print(f'last_name = {data['last_name']}')
+        print(f'major = {data['major_id']}')
         print(f'email = {data['email']}')
         print(f'phone = {data['phone']}')
         print(f'address = {data['address']}')
@@ -29,8 +30,8 @@ def add_user(data):
         print(f'zip_code = {data['zip_code']}')
         
         cursor.execute(
-            "INSERT INTO students (username, password, first_name, last_name, email, phone, address, city, state, zip_code) "
-            "VALUES (%(username)s, %(password)s, %(first_name)s, %(last_name)s, %(email)s, %(phone)s, %(address)s, %(city)s, %(state)s, %(zip_code)s)",
+            "INSERT INTO students (major_id, username, password, first_name, last_name, email, phone, address, city, state, zip_code) "
+            "VALUES (%(major_id)s, %(username)s, %(password)s, %(first_name)s, %(last_name)s, %(email)s, %(phone)s, %(address)s, %(city)s, %(state)s, %(zip_code)s)",
             data
         )
         connection.commit()
@@ -44,7 +45,7 @@ def add_user(data):
 # Find a user by username
 def find_user_by_username(username):
     connection = get_db_connection()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM students WHERE username=%(username)s", {'username': username})
     user = cursor.fetchone()
     cursor.close()

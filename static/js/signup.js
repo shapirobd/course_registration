@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const password = document.getElementById("password").value.trim();
 		const firstName = document.getElementById("first_name").value.trim();
 		const lastName = document.getElementById("last_name").value.trim();
+		const major = document.getElementById("major").value.trim();
 		const email = document.getElementById("email").value.trim();
 		const phone = document.getElementById("phone").value.trim();
 		const address = document.getElementById("address").value.trim();

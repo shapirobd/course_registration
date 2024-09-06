@@ -108,6 +108,10 @@
         .course-item button:hover {
             background-color: #0056b3;
         }
+        .registered,
+        .registered:hover {
+            background-color: #777;
+        }
         .semester-select {
             margin-bottom: 20px;
             width: 100%;
@@ -135,14 +139,14 @@
 <div class="container">
     <!-- Tabs for course types -->
     <div class="tabs">
-        <div class="tab active" id="genEdTab" onclick="selectTab('genEd')">General Education</div>
-        <div class="tab" id="majorTab" onclick="selectTab('major')">Major Coursework</div>
-        <div class="tab" id="electiveTab" onclick="selectTab('elective')">General Elective</div>
+        <div class="tab active" id="genEdTab" data-value="1" onclick="selectTab('genEd')">General Education</div>
+        <div class="tab" id="majorTab" data-value="3" onclick="selectTab('major')">Major Coursework</div>
+        <div class="tab" id="electiveTab" data-value="2" onclick="selectTab('elective')">General Elective</div>
     </div>
 
     <!-- Progress bar -->
     <div class="progress-bar-container">
-        <div id="progressBarText">12/18 Credits Completed</div>
+        <div id="progressBarText"></div>
         <div class="progress-bar">
             <div class="progress" id="progressBar"></div>
         </div>
@@ -150,10 +154,11 @@
 
     <!-- Semester/Term selection -->
     <div class="semester-select">
-        <select id="termSelect">
+        {# <select id="termSelect">
             <option value="spring2025">Spring 2025</option>
             <option value="fall2024">Fall 2024</option>
-        </select>
+        </select> #}
+        <h3>{{semester.season}} {{semester.year}}</h3>
     </div>
 
     <!-- Search button -->
@@ -170,30 +175,31 @@
         <!-- If no courses are available -->
         <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
     </div>
+
+    {# <input type="hidden" id="selected_course_type" data-value="{{semester.id}}" /> #}
 </div>
 
 <script>
-    // JavaScript to manage tab selection, progress bar update, and course search
-    function selectTab(tab) {
-        // Reset all tabs to inactive
-        document.getElementById('genEdTab').classList.remove('active');
-        document.getElementById('majorTab').classList.remove('active');
-        document.getElementById('electiveTab').classList.remove('active');
+    const completedCreditsArray = {{ completed_credits | tojson }};
+    const major = {{ major | tojson }}
 
-        // Activate the selected tab
-        document.getElementById(tab + 'Tab').classList.add('active');
+    function updateProgressBar(course_type) {
+        let completedCredits = completedCreditsArray[course_type - 1]
+        let requiredCredits = 0;
 
-        // Update progress bar based on the selected tab (example logic)
-        let completedCredits = 0;
-        let requiredCredits = 18;
-
-        if (tab === 'genEd') {
-            completedCredits = 12;
-        } else if (tab === 'major') {
-            completedCredits = 8;
-        } else if (tab === 'elective') {
-            completedCredits = 15;
+        console.log('course_type = ', course_type)
+        console.log('major = ', major)
+        if (course_type === 1) {
+            requiredCredits = major.required_general_education_credits
+        } else if (course_type === 3) {
+            requiredCredits = major.required_major_coursework_credits
+        } else if (course_type === 2) {
+            requiredCredits = major.required_general_elective_credits
         }
+
+        console.log('completedCreditsArray = ', completedCreditsArray)
+        console.log('completedCredits = ' + completedCredits)
+        console.log('requiredCredits = ' + requiredCredits)
 
         const progressBar = document.getElementById('progressBar');
         const progressBarText = document.getElementById('progressBarText');
@@ -204,55 +210,122 @@
 
         // Check if the required credits are completed
         if (completedCredits >= requiredCredits) {
-            document.getElementById('courseList').style.display = 'none';
-            document.getElementById('noCoursesText').style.display = 'block';
-            document.getElementById('noCoursesText').innerText = 'All credits for this course type are completed.';
+            jQuery('#courseList').css('display', 'none');
+            jQuery('#noCoursesText').css('display', 'block');
+            jQuery('#noCoursesText').text('All credits for this course type are completed.');
         } else {
-            document.getElementById('courseList').style.display = 'block';
-            document.getElementById('noCoursesText').style.display = 'none';
+            jQuery('#courseList').css('display', 'block');
+            jQuery('#noCoursesText').css('display', 'none');
         }
+    }
+
+    // JavaScript to manage tab selectIon, progress bar update, and course search
+    function selectTab(tab) {
+        // Reset all tabs to inactive
+        document.getElementById('genEdTab').classList.remove('active');
+        document.getElementById('majorTab').classList.remove('active');
+        document.getElementById('electiveTab').classList.remove('active');
+
+        // Activate the selected tab
+        let tab_element = jQuery('#' + tab + 'Tab');
+        console.log('tab_element = ', tab_element)
+        let course_type = parseInt(jQuery(tab_element).attr('data-value'));
+        jQuery(tab_element).addClass('active');
+
+        // Update progress bar based on the selected tab (example logic)
+        updateProgressBar(course_type)
     }
 
     function searchCourses() {
         // Example search function
-        const term = document.getElementById('termSelect').value;
+        // const term = document.getElementById('termSelect').value;
         const courseList = document.getElementById('courseList');
+        const courseType = jQuery(jQuery('.tab.active')[0]).attr('data-value')
 
         // Clear previous search results
         courseList.innerHTML = '';
 
+        jQuery.ajax({
+            url: "/search_courses?course_type=" + courseType,  // Sample API endpoint
+            method: "GET",  // HTTP method (GET, POST, etc.)
+            dataType: "json",  // Expected data type
+            success: function(courses) {
+                console.log('courses = ', courses)
+                if (courses.length > 0) {
+                    courses.forEach(course => {
+                        const courseItem = document.createElement('div');
+                        courseItem.className = 'course-item';
+                        courseItem.innerHTML = `<span>${course.course_name}</span><button id="course_${course.id}" onclick="registerCourse(${course.id})">Register</button>`;
+                        courseList.appendChild(courseItem);
+                    });
+                    jQuery('#noCoursesText').css('display', 'none');
+                } else {
+                    jQuery('#noCoursesText').css('display', 'block');
+                    jQuery('#noCoursesText').text('No courses available for this semester.');
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                $("#result").text("Error: " + error);
+            }
+        })
+
         // Example courses based on the selected term and active tab
-        let courses = [];
-        const activeTab = document.querySelector('.tab.active').id;
+        // let courses = [];
+        // const activeTab = document.querySelector('.tab.active').id;
 
-        if (term === 'spring2025' && activeTab === 'genEdTab') {
-            courses = ['World History', 'Mathematics II'];
-        } else if (term === 'fall2024' && activeTab === 'majorTab') {
-            courses = ['Data Structures', 'Operating Systems'];
-        }
+        // if (term === 'spring2025' && activeTab === 'genEdTab') {
+        //     courses = ['World History', 'Mathematics II'];
+        // } else if (term === 'fall2024' && activeTab === 'majorTab') {
+        //     courses = ['Data Structures', 'Operating Systems'];
+        // }
 
-        if (courses.length > 0) {
-            courses.forEach(course => {
-                const courseItem = document.createElement('div');
-                courseItem.className = 'course-item';
-                courseItem.innerHTML = `<span>${course}</span><button onclick="registerCourse('${course}')">Register</button>`;
-                courseList.appendChild(courseItem);
-            });
-            document.getElementById('noCoursesText').style.display = 'none';
-        } else {
-            document.getElementById('noCoursesText').style.display = 'block';
-            document.getElementById('noCoursesText').innerText = 'No courses available for this semester.';
-        }
+        // if (courses.length > 0) {
+        //     courses.forEach(course => {
+        //         const courseItem = document.createElement('div');
+        //         courseItem.className = 'course-item';
+        //         courseItem.innerHTML = `<span>${course}</span><button onclick="registerCourse(${course})">Register</button>`;
+        //         courseList.appendChild(courseItem);
+        //     });
+        //     jQuery('#noCoursesText').css('display', 'none');
+        // } else {
+        //     jQuery('#noCoursesText').css('display', 'block');
+        //     jQuery('#noCoursesText').text('No courses available for this semester.');
+        // }
     }
 
-    function registerCourse(course) {
+    function registerCourse(course_id) {
         // Example register function
-        alert(`Registered for ${course}`);
+        const data = { course_id }
+
+        jQuery.ajax({
+            url: "/register_for_course",
+            method: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function(course) {
+                console.log(course)
+                alert(`Successfully registered for ${course.course_name}`)
+                jQuery('#course_' + course_id).prop('disabled', true);
+                jQuery('#course_' + course_id).removeAttr("onclick");;
+                jQuery('#course_' + course_id).text('Registered');
+                jQuery('#course_' + course_id).addClass('registered');
+
+                completedCreditsArray[course.course_type - 1] += course.credits
+                updateProgressBar(course.course_type)
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                $("#result").text("Error: " + error);
+            }
+        })
     }
     document.addEventListener('DOMContentLoaded', function() {
+        console.log(1)
         selectTab('genEd');
         document.getElementById('courseList').innerHTML = '';
-        document.getElementById('noCoursesText').style.display = 'none';
+        jQuery('#noCoursesText').css('display', 'none');
     });
 </script>
 

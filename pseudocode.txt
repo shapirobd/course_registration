@@ -1,0 +1,267 @@
+############
+## app.py ##
+############
+
+# Decorator function that takes a function f as an argument
+def login_required(f):
+    # Inner function that accepts any number of positional and keyword arguments (*args, **kwargs)
+    def wrap(*args, **kwargs):
+        if 'username' not in session:
+            redirect to /login route
+        call the original function f with the provided arguments
+    wrap.__name__ = f.__name__
+    return wrap
+
+
+# Route for user signup
+@app.route('/signup', methods=['POST'])
+def doSignup():
+    try:
+        user_data = dictionary containing signup form data (with hashed password)
+
+        if username, email, or password are empty:
+            return an error message and status code 400
+
+        # Check if user already exists
+        if a user with the enetered username already exists:
+            return an error message and status code 409
+
+        # Add the new user to the database
+        users.add_user(user_data)
+        user = users.find_user_by_username(user_data['username'])
+        add username and user.student_id to session
+        add next_semester_id to session by calling the courses.get_next_semester() function
+        redirect to root route
+
+    # Handle specific database errors
+    except mysql.connector.Error as db_err:
+        return an error message and status code 500
+    
+    # Handle missing data in the request JSON
+    except KeyError as key_err:
+        return an error message and status code 400
+    
+    # Catch all other exceptions
+    except Exception as ex:
+        return an error message and status code 500
+
+
+# Route for user login
+@app.route('/login', methods=['POST'])
+def doLogin():
+    try:
+        get username and password from post form data
+
+        if username or password are empty:
+            return an error message and status code 400
+
+        # Find the user by username
+        user = users.find_user_by_username(username)
+        if user not found:
+            return an error message and status code 404
+
+        # Check the password
+        get hashed password from the found user
+        if the entered password (after being hashed) matches t he hashed password from the user:
+            add username and user.student_id to session
+            add next_semester_id to session by calling the courses.get_next_semester() function
+            redirect to root route
+        else:
+            return an error message and status code 401
+
+    # Handle specific database errors
+    except mysql.connector.Error as db_err:
+        return an error message and status code 500
+
+    # Handle missing data in the request JSON
+    except KeyError as key_err:
+        return an error message and status code 400
+
+    # Catch all other exceptions
+    except Exception as ex:
+        return an error message and status code 500
+
+
+@app.route('/login', methods=['GET'])
+def login():
+    if 'username' in session:
+        redirect to root route
+    render the 'login.html' template
+
+
+@app.route('/signup', methods=['GET'])
+def signup():
+    if 'username' in session:
+        redirect to root route
+    render the 'signup.html' template
+
+
+@app.route('/')
+@login_required
+def home():
+    registered_courses = courses.get_registered_courses(session['next_semester_id'], session['student_id'])
+    render the 'registered_courses.html' template, passing the course data so it can be displayed in the UI
+
+
+@app.route('/course_search')
+@login_required
+def course_search():
+    render the 'course_search.html'
+
+
+@app.route('/get_completed_credits')
+@login_required
+def get_completed_credits():
+    completed_credits = courses.get_completed_credits(session['next_semester_id'], session['student_id'])
+    return the student's completed credits for each course type in json format
+
+
+@app.route('/search_courses')
+@login_required
+def search_courses():
+    course_type = request.args.get('course_type')
+    return courses.search_courses(session['next_semester_id'], session['student_id'], course_type)
+
+
+@app.route('/register_for_course', methods=['POST'])
+@login_required
+def register_for_course():
+    course_id = 'course_id' value from form data
+    return courses.register_for_course(session['next_semester_id'], session['student_id'], course_id)
+
+
+@app.route('/drop_course', methods=['POST'])
+@login_required
+def drop_course():
+    course_id = 'course_id' value from form data
+    return courses.drop_course(session['next_semester_id'], session['student_id'], course_id)
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    user = users.find_user_by_username(session['username'])
+    render the 'profile.html' template, passing the user data so it can be displayed in the UI
+
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    # Check if user is logged in (already checked by @login_required, but just for safe measure to avoid any errors)
+    if 'username' in session and 'student_id' in session and 'next_semester_id' in session:
+        remove username, student_id and next_semester_id from session
+        redirect '/login' route
+    else:
+        return error message and status code 401
+
+
+##############
+## users.py ##
+##############
+
+# Check if user exists
+def user_exists(username):
+    connect to database
+    user = query to see if the user exists in the student table based on username
+    close the database connection
+    return user is not None
+
+# Add a new user
+def add_user(data):
+    connect to database
+    try:
+        insert a new record into the students table with the user info from the signup form
+    except mysql.connector.Error as db_err:
+        return an error message
+    finally:
+        close the database connection
+    return "Success!"
+
+
+# Find a user by username
+def find_user_by_username(username):
+    connect to database
+    user = query the user's info from the student table based on username
+    close the connection
+    return user
+
+
+################
+## courses.py ##
+################
+
+# get list of registered courses
+def get_next_semester():
+    connect to database
+    semester = query the next semester's data from the semesters table
+    close the database connection
+    return the semester's id
+
+
+# get list of registered courses
+def get_registered_courses(semester_id, student_id):
+    connect to database
+    courses = query the courses the student has registered for for the next semester
+    close the database connection
+    return courses
+
+
+# get all completed credits, broken down by course type
+def get_completed_credits(next_semester_id, student_id):
+    connect to database
+    courses = query the courses the student has passed, or is currently taking, or is registered to take next semester
+    close the database connection
+    return courses
+
+
+# get list of courses the student can sign up for
+def search_courses(semester_id, student_id, course_type):
+    connect to database
+    courses = query all courses of a specific course type that fall under the student's major, aren't already in the student's registered class list, and aren't full
+    close the database connection
+    return courses
+
+
+# register for a single course
+def register_for_course(semester_id, student_id, course_id):
+    try:
+      connect to database
+      insert a new record into the student_courses table with the student_id, course_id and semester_id
+    except mysql.connector.Error as db_err:
+        return an error message
+    finally:
+        close the database connection
+    return "Success!"
+
+
+# drop a single course
+def drop_course(semester_id, student_id, course_id):
+    try:
+      connect to database
+      delete the record from the student_courses table with the corresponding student_id, course_id and semester_id
+    except mysql.connector.Error as db_err:
+        return an error message
+    finally:
+        close the database connection
+    return "Success!"
+
+
+###########
+## db.py ##
+###########
+
+# Database configuration using environment variables
+db_config = dictionary with database configuration variables
+
+# Connect to the database
+def get_db_connection():
+    try:
+        connection = create database connection
+        return connection
+    except Error as err:
+        if the error is an access denied error:
+            print("Something is wrong with your user name or password")
+        elif the error involves the database not existing:
+            print("Database does not exist")
+        else:
+            print(err)

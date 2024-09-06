@@ -1,0 +1,14 @@
+TODO:
+
+x  Build & populate course_types table
+x  Build & populate courses table
+x  Build & populate majors table
+x  Build & populate semesters table
+x  Build student_courses table
+
+x  Make sure course type credit progress tracker works
+x  Make sure course search works end to end
+x  Make sure course registration works end to end
+-  Make sure dropping courses works end to end
+x  Make sure list of registered courses works end to end
+x  Make sure profile works end to end

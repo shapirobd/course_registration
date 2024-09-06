@@ -58,7 +58,7 @@ def doSignup():
         users.add_user(user_data)
         user = users.find_user_by_username(user_data['username'])
         session['username'] = user_data['username']
-        session['student_id'] = user[0]
+        session['student_id'] = user['id']
         session['next_semester_id'] = courses.get_next_semester()
         print(f"session['username'] = {session['username']}")
         return redirect('/')
@@ -96,10 +96,10 @@ def doLogin():
             return jsonify({"error": "User not found"}), 404
 
         # Check the password
-        stored_password_hash = user[3]
+        stored_password_hash = user['password']
         if bcrypt.check_password_hash(stored_password_hash, password):
             session['username'] = username
-            session['student_id'] = user[0]
+            session['student_id'] = user['id']
             session['next_semester_id'] = courses.get_next_semester()
             return redirect('/')
         else:

@@ -136,10 +136,10 @@ def signup():
     return render_template('signup.html', majors=majors)
 
 
-@app.route('/')
-@login_required
-def home():
-    return render_template('home.html', selected_nav_link='home')
+# @app.route('/')
+# @login_required
+# def home():
+#     return render_template('home.html', selected_nav_link='home')
 
 
 @app.route('/course_search')
@@ -186,11 +186,51 @@ def drop_course():
     return courses.drop_course(session['next_semester_id'], session['student_id'], course_id)
 
 
-@app.route('/profile')
+@app.route('/')
 @login_required
 def profile():
     user = users.find_user_by_username(session['username'])
     return render_template('profile.html', user=user, selected_nav_link="profile")
+
+
+@app.route('/update_profile', methods=['POST'])
+@login_required
+def update_profile():
+    try:
+        user_data = {
+            'username': request.form.get('username'),
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'email': request.form.get('email'),
+            'phone': request.form.get('phone'),
+            'address': request.form.get('address'),
+            'city': request.form.get('city'),
+            'state': request.form.get('state'),
+            'zip_code': request.form.get('zip_code')
+        }
+
+        if not user_data['username'] or not user_data['email']:
+            return jsonify({"error": "Please provide username and email"}), 400
+
+        # Add the new user to the database
+        users.update_user(user_data)
+
+        return redirect('/profile')
+
+    except mysql.connector.Error as db_err:
+        # Handle specific database errors
+        print(f"Database error: {db_err}")
+        return jsonify({"error": "Database connection error"}), 500
+    
+    except KeyError as key_err:
+        # Handle missing data in the request JSON
+        print(f"Key error: {key_err}")
+        return jsonify({"error": f"Missing key: {str(key_err)}"}), 400
+    
+    except Exception as ex:
+        # Catch all other exceptions
+        print(f"An error occurred: {ex}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
 
 @app.route('/logout', methods=['POST'])

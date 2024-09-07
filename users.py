@@ -42,6 +42,42 @@ def add_user(data):
         connection.close()
 
 
+# Update an existing user
+def update_user(data):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        print(f'username = {data['username']}')
+        print(f'first_name = {data['first_name']}')
+        print(f'last_name = {data['last_name']}')
+        print(f'email = {data['email']}')
+        print(f'phone = {data['phone']}')
+        print(f'address = {data['address']}')
+        print(f'city = {data['city']}')
+        print(f'state = {data['state']}')
+        print(f'zip_code = {data['zip_code']}')
+        
+        cursor.execute(
+            "UPDATE students SET "
+                "first_name = %(first_name)s, "
+                "last_name = %(last_name)s, "
+                "email = %(email)s, "
+                "phone = %(phone)s, "
+                "address = %(address)s, "
+                "city = %(city)s, "
+                "state = %(state)s, "
+                "zip_code = %(zip_code)s "
+                "WHERE username = %(username)s",
+            data
+        )
+        connection.commit()
+    except mysql.connector.Error as db_err:
+        print(f"Database error: {db_err}")
+    finally:
+        cursor.close()
+        connection.close()
+
+
 # Find a user by username
 def find_user_by_username(username):
     connection = get_db_connection()

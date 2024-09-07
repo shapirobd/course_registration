@@ -17,12 +17,13 @@
             height: 100vh;
             width: 230px;
             position: fixed;
-            border: 1px solid #FFFFFF;
             background-image: url('/static/images/Sidenav.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
             color: #FFFFFF;
+            box-shadow: inset -20px 0 25px rgba(0, 0, 0, 0.4)
+            padding-top: 15px;
         }
         .sidenav h3 {
             color: #FFFFFF;
@@ -93,23 +94,27 @@
         #logout-btn {
             color: #f00;
         }
+        #main-header {
+            background-color: #007bff;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    {{ 'Home' if selected_nav_link == 'home' else (
-        'Registered Courses' if selected_nav_link == "registered_courses" else (
+<header id="main-header">
+    {{ 'Registered Courses' if selected_nav_link == "registered_courses" else (
             'Search for Courses' if selected_nav_link == "course_search" else 'Profile Information'
-        ))}}
+        )}}
 </header>
 
 <div class="sidenav">
-    <h3 id="nav-header">Navigation</h3>
-    <a class="nav-link {{ 'selected' if selected_nav_link == 'home' else ''}}" href="/">Home</a>
+    {# <h3 id="nav-header">Navigation</h3> #}
+    {# <a class="nav-link {{ 'selected' if selected_nav_link == 'home' else ''}}" href="/">Home</a> #}
+    <a class="nav-link {{ 'selected' if selected_nav_link == 'profile' else ''}}" href="/">Profile</a>
     <a class="nav-link {{ 'selected' if selected_nav_link == 'registered_courses' else ''}}" href="/registered_courses">Registered Courses</a>
     <a class="nav-link {{ 'selected' if selected_nav_link == 'course_search' else ''}}" href="/course_search">Course Search</a>
-    <a class="nav-link {{ 'selected' if selected_nav_link == 'profile' else ''}}" href="/profile">Profile</a>
+
     <form action="/logout" method="post">
         <button id="logout-btn" class="nav-link" type="submit"><b>Logout</b></button>
     </form>

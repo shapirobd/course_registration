@@ -25,7 +25,6 @@
         }
         .container {
             background: #fff;
-            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
@@ -34,11 +33,19 @@
             flex-direction: column;
             align-items: flex-start;
             overflow-y: auto;
-            max-width: calc(100% - 260px);
+            /* max-width: calc(100% - 260px); */
+            width: 750px;
             margin-left: 230px;
         }
-        .container h2 {
-            margin-top: 0;
+        #search-container {
+            padding: 20px;
+            width: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #search-container h3 {
+            margin: 0;
             width: 100%;
             padding: 10px;
             background-color: #f4f4f4;
@@ -57,14 +64,28 @@
             padding: 10px;
             text-align: center;
             background-color: #f4f4f4;
-            border: 1px solid #ddd;
+            /* border: 1px solid #ddd; */
             cursor: pointer;
+        }
+        .tab:hover {
+            background-color: #e4e4e4;
         }
         .tab.active {
             background-color: #007bff;
             color: white;
             border: 1px solid #007bff;
         }
+        .tab.active:hover {
+            background-color: #108bff;
+            color: white;
+            border: 1px solid #108bff;
+        }
+        /*
+        #majorTab {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        */
         .progress-bar-container {
             width: 100%;
             margin-bottom: 20px;
@@ -93,8 +114,8 @@
             justify-content: space-between;
             margin-bottom: 10px;
             padding: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
+            /* background-color: #f4f4f4; */
+            border-bottom: 1px solid #ddd;
             border-radius: 4px;
         }
         .course-item button {
@@ -128,6 +149,15 @@
             font-size: 16px;
             margin-top: 20px;
         }
+        .search-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -143,33 +173,34 @@
         <div class="tab" id="majorTab" data-value="3" onclick="selectTab('major')">Major Coursework</div>
         <div class="tab" id="electiveTab" data-value="2" onclick="selectTab('elective')">General Elective</div>
     </div>
-
-    <!-- Progress bar -->
-    <div class="progress-bar-container">
-        <div id="progressBarText"></div>
-        <div class="progress-bar">
-            <div class="progress" id="progressBar"></div>
+    <div id="search-container">
+        <!-- Progress bar -->
+        <div class="progress-bar-container">
+            <div id="progressBarText"></div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
         </div>
-    </div>
 
-    <!-- Semester/Term selection -->
-    <div class="semester-select">
-        <h3>Next Semester: {{semester.season}} {{semester.year}}</h3>
-    </div>
-
-    <!-- Search button -->
-    <button onclick="searchCourses()">Search</button>
-
-    <!-- List of available courses -->
-    <div id="courseList" class="course-list">
-        <!-- Example of a course item -->
-        <!-- This will be dynamically generated -->
-        <div class="course-item">
-            <span>Introduction to Programming</span>
-            <button onclick="registerCourse('Introduction to Programming')">Register</button>
+        <!-- Semester/Term selection -->
+        <div class="semester-select">
+            <h3>Next Semester: {{semester.season}} {{semester.year}}</h3>
         </div>
-        <!-- If no courses are available -->
-        <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
+
+        <!-- Search button -->
+        <button class="search-btn" onclick="searchCourses()">Search</button>
+
+        <!-- List of available courses -->
+        <div id="courseList" class="course-list">
+            <!-- Example of a course item -->
+            <!-- This will be dynamically generated -->
+            <div class="course-item">
+                <span>Introduction to Programming</span>
+                <button onclick="registerCourse('Introduction to Programming')">Register</button>
+            </div>
+            <!-- If no courses are available -->
+            <p id="noCoursesText" class="no-courses">No courses available for this semester.</p>
+        </div>
     </div>
 
     {# <input type="hidden" id="selected_course_type" data-value="{{semester.id}}" /> #}

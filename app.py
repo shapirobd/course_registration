@@ -215,7 +215,7 @@ def update_profile():
         # Add the new user to the database
         users.update_user(user_data)
 
-        return redirect('/profile')
+        return redirect('/')
 
     except mysql.connector.Error as db_err:
         # Handle specific database errors

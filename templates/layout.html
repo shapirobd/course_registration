@@ -98,7 +98,10 @@
 <body>
 
 <header>
-    Online Course Registration Project
+    {{ 'Home' if selected_nav_link == 'home' else (
+        'Registered Courses' if selected_nav_link == "registered_courses" else (
+            'Search for Courses' if selected_nav_link == "course_search" else 'Profile Information'
+        ))}}
 </header>
 
 <div class="sidenav">

@@ -71,26 +71,19 @@ def get_completed_credits(next_semester_id, student_id):
         completed_credits[course['course_type'] - 1] += course['credits']
     return completed_credits
 
-# def get_completed_courses(next_semester_id, student_id):
-#     connection = get_db_connection()
-#     cursor = connection.cursor(dictionary=True)
-#     cursor.execute("SELECT sc.*, c.course_type FROM student_courses sc "
-#                    "INNER JOIN courses c ON c.id = sc.course_id "
-#                    "WHERE student_id = %(student_id)s", {'student_id': student_id})
-#     # cursor.execute("SELECT * FROM student_courses WHERE student_id = %(student_id)s AND semester_id < %(next_semester_id)s - 1 AND credits_earned > 0 UNION "
-#     #                "SELECT * FROM student_courses WHERE student_id = %(student_id)s AND semester_id >= %(next_semester_id)s - 1", 
-#     #                {'student_id': student_id, 'next_semester_id': next_semester_id})
-#     courses = cursor.fetchall()
-#     cursor.close()
-#     connection.close()
-#     return courses
-
 
 # get list of courses the student can sign up for
-def search_courses(semester_id, student_id, course_type):
+def search_courses(semester_id, student_id, course_type, major):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
+    print('\n')
+    print(f'semester_id = {semester_id}')
+    print(f'student_id = {student_id}')
+    print(f'course_type = {course_type}')
+    print(f'major = {major}')
+
+    # GENERAL ELECGusAndPhoebe7292@@@fTIVES
     if course_type == 2:
         cursor.execute(f"""SELECT c.* FROM courses c
             WHERE c.course_type = {course_type}
@@ -103,7 +96,32 @@ def search_courses(semester_id, student_id, course_type):
                GROUP BY sc.course_id
                HAVING COUNT(sc.id) >= 15
              )
+             AND (c.prerequisite_course = 0 OR c.prerequisite_course IN (
+                SELECT sc.id FROM student_courses sc WHERE sc.student_id = {student_id} AND sc.course_id = c.prerequisite_course AND (
+                    sc.semester_id = {semester_id} - 1 OR (sc.semester_id < {semester_id} - 1 AND sc.credits_earned > 0)
+                )
+             ))
              """)
+    # GENERAL EDUCATION
+    elif course_type == 1:
+        cursor.execute(f"""SELECT c.* FROM courses c
+             WHERE c.course_type = {course_type} AND c.major IN ({major}, 0)
+              AND c.id NOT IN (
+                SELECT course_id FROM student_courses sc WHERE sc.semester_id = {semester_id} AND sc.student_id = {student_id}
+              )
+              AND c.id NOT IN (
+                SELECT course_id FROM student_courses sc
+                WHERE sc.semester_id = {semester_id}
+                GROUP BY sc.course_id
+                HAVING COUNT(sc.id) >= 15
+              )
+              AND (c.prerequisite_course = 0 OR c.prerequisite_course IN (
+                SELECT sc.id FROM student_courses sc WHERE sc.student_id = {student_id} AND sc.course_id = c.prerequisite_course AND (
+                    sc.semester_id = {semester_id} - 1 OR (sc.semester_id < {semester_id} - 1 AND sc.credits_earned > 0)
+                )
+              ))
+              """)
+    # MAJOR COURSEWORK
     else:
         cursor.execute(f"""SELECT c.* FROM students s 
              INNER JOIN courses c ON c.major = s.major_id
@@ -117,8 +135,14 @@ def search_courses(semester_id, student_id, course_type):
                 GROUP BY sc.course_id
                 HAVING COUNT(sc.id) >= 15
               )
+              AND (c.prerequisite_course = 0 OR c.prerequisite_course IN (
+                 SELECT sc.id FROM student_courses sc WHERE sc.student_id = {student_id} AND sc.course_id = c.prerequisite_course AND (
+                     sc.semester_id = {semester_id} - 1 OR (sc.semester_id < {semester_id} - 1 AND sc.credits_earned > 0)
+                 )
+              ))
               """)
     courses = cursor.fetchall()
+    print(f'courses = {courses}')
     cursor.close()
     connection.close()
     return courses

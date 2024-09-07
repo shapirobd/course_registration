@@ -62,7 +62,6 @@ def doSignup():
         session['next_semester_id'] = courses.get_next_semester()
         print(f"session['username'] = {session['username']}")
         return redirect('/')
-        # return jsonify({"message": "User created successfully"}), 201
 
     except mysql.connector.Error as db_err:
         # Handle specific database errors
@@ -136,11 +135,6 @@ def signup():
     print(f'majors = {majors}')
     return render_template('signup.html', majors=majors)
 
-# @app.route('/')
-# @login_required
-# def home():
-#     return render_template('home.html')
-
 
 @app.route('/')
 @login_required
@@ -158,13 +152,6 @@ def course_search():
     return render_template('course_search.html', semester=semester, completed_credits=completed_credits, major=major, selected_nav_link="course_search")
 
 
-# @app.route('/get_completed_credits')
-# @login_required
-# def get_completed_credits():
-#     completed_courses = courses.get_completed_courses(session['next_semester_id'], session['student_id'])
-#     return completed_credits
-
-
 @app.route('/registered_courses')
 @login_required
 def registered_courses():
@@ -177,13 +164,10 @@ def registered_courses():
 @app.route('/search_courses')
 @login_required
 def search_courses():
-    course_type = request.args.get('course_type')
-    return courses.search_courses(session['next_semester_id'], session['student_id'], course_type)
+    course_type = int(request.args.get('course_type'))
+    major = int(request.args.get('major'))
+    return courses.search_courses(session['next_semester_id'], session['student_id'], course_type, major)
 
-# @app.route('/registered_courses')
-# @login_required
-# def registered_courses():
-#     return render_template('registered_courses.html')
     
 @app.route('/register_for_course', methods=['POST'])
 @login_required

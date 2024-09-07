@@ -154,10 +154,6 @@
 
     <!-- Semester/Term selection -->
     <div class="semester-select">
-        {# <select id="termSelect">
-            <option value="spring2025">Spring 2025</option>
-            <option value="fall2024">Fall 2024</option>
-        </select> #}
         <h3>Next Semester: {{semester.season}} {{semester.year}}</h3>
     </div>
 
@@ -246,7 +242,7 @@
         courseList.innerHTML = '';
 
         jQuery.ajax({
-            url: "/search_courses?course_type=" + courseType,  // Sample API endpoint
+            url: "/search_courses?course_type=" + courseType + "&major=" + major.id,  // Sample API endpoint
             method: "GET",  // HTTP method (GET, POST, etc.)
             dataType: "json",  // Expected data type
             success: function(courses) {
@@ -269,29 +265,6 @@
                 $("#result").text("Error: " + error);
             }
         })
-
-        // Example courses based on the selected term and active tab
-        // let courses = [];
-        // const activeTab = document.querySelector('.tab.active').id;
-
-        // if (term === 'spring2025' && activeTab === 'genEdTab') {
-        //     courses = ['World History', 'Mathematics II'];
-        // } else if (term === 'fall2024' && activeTab === 'majorTab') {
-        //     courses = ['Data Structures', 'Operating Systems'];
-        // }
-
-        // if (courses.length > 0) {
-        //     courses.forEach(course => {
-        //         const courseItem = document.createElement('div');
-        //         courseItem.className = 'course-item';
-        //         courseItem.innerHTML = `<span>${course}</span><button onclick="registerCourse(${course})">Register</button>`;
-        //         courseList.appendChild(courseItem);
-        //     });
-        //     jQuery('#noCoursesText').css('display', 'none');
-        // } else {
-        //     jQuery('#noCoursesText').css('display', 'block');
-        //     jQuery('#noCoursesText').text('No courses available for this semester.');
-        // }
     }
 
     function registerCourse(course_id) {

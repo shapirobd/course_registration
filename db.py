@@ -9,7 +9,6 @@ db_config = {
     'database': os.getenv('DB_NAME'),
 }
 
-print(db_config)
 
 # Connect to the database
 def get_db_connection():

@@ -13,9 +13,12 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configurations using environment variables
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')  # Fall back to a default value if not set
-app.config['SESSION_TYPE'] = 'filesystem'  # Still using filesystem for session storage
+# Fall back to a default value if not set
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
+# Still using filesystem for session storage
+app.config['SESSION_TYPE'] = 'filesystem'
 bcrypt = Bcrypt(app)
+
 
 # Decorator to check if user is logged in
 def login_required(f):
@@ -35,7 +38,8 @@ def doSignup():
     try:
         user_data = {
             'username': request.form.get('username'),
-            'password': bcrypt.generate_password_hash(request.form.get('password')).decode('utf-8'),
+            'password': bcrypt.generate_password_hash(
+                request.form.get('password')).decode('utf-8'),
             'first_name': request.form.get('first_name'),
             'last_name': request.form.get('last_name'),
             'major_id': request.form.get('major'),
@@ -44,11 +48,11 @@ def doSignup():
             'address': request.form.get('address'),
             'city': request.form.get('city'),
             'state': request.form.get('state'),
-            'zip_code': request.form.get('zip_code')
-        }
+            'zip_code': request.form.get('zip_code')}
 
         if not user_data['username'] or not user_data['email'] or not user_data['password']:
-            return jsonify({"error": "Please provide username, email, and password"}), 400
+            return jsonify(
+                {"error": "Please provide username, email, and password"}), 400
 
         # Check if user already exists
         if users.user_exists(user_data['username']):
@@ -67,12 +71,12 @@ def doSignup():
         # Handle specific database errors
         print(f"Database error: {db_err}")
         return jsonify({"error": "Database connection error"}), 500
-    
+
     except KeyError as key_err:
         # Handle missing data in the request JSON
         print(f"Key error: {key_err}")
         return jsonify({"error": f"Missing key: {str(key_err)}"}), 400
-    
+
     except Exception as ex:
         # Catch all other exceptions
         print(f"An error occurred: {ex}")
@@ -87,7 +91,8 @@ def doLogin():
         password = request.form.get('password')
 
         if not username or not password:
-            return jsonify({"error": "Please provide username and password"}), 400
+            return jsonify(
+                {"error": "Please provide username and password"}), 400
 
         # Find the user by username
         user = users.find_user_by_username(username)
@@ -146,19 +151,31 @@ def signup():
 @login_required
 def course_search():
     semester = courses.get_semester_details([session['next_semester_id']])[0]
-    completed_credits = courses.get_completed_credits(session['next_semester_id'], session['student_id'])
+    completed_credits = courses.get_completed_credits(
+        session['next_semester_id'], session['student_id'])
     print(f'completed_credits = {completed_credits}')
     major = courses.get_major(session['student_id'])
-    return render_template('course_search.html', semester=semester, completed_credits=completed_credits, major=major, selected_nav_link="course_search")
+    return render_template(
+        'course_search.html',
+        semester=semester,
+        completed_credits=completed_credits,
+        major=major,
+        selected_nav_link="course_search")
 
 
 @app.route('/registered_courses')
 @login_required
 def registered_courses():
-    registered_courses = courses.get_registered_courses(session['next_semester_id'], session['student_id'])
-    semesters = courses.get_semester_details([session['next_semester_id'] - 1, session['next_semester_id']])
+    registered_courses = courses.get_registered_courses(
+        session['next_semester_id'], session['student_id'])
+    semesters = courses.get_semester_details(
+        [session['next_semester_id'] - 1, session['next_semester_id']])
     print(f'semesters = {semesters}')
-    return render_template('registered_courses.html', registered_courses=registered_courses, semesters=semesters, selected_nav_link='registered_courses')
+    return render_template(
+        'registered_courses.html',
+        registered_courses=registered_courses,
+        semesters=semesters,
+        selected_nav_link='registered_courses')
 
 
 @app.route('/search_courses')
@@ -166,16 +183,23 @@ def registered_courses():
 def search_courses():
     course_type = int(request.args.get('course_type'))
     major = int(request.args.get('major'))
-    return courses.search_courses(session['next_semester_id'], session['student_id'], course_type, major)
+    return courses.search_courses(
+        session['next_semester_id'],
+        session['student_id'],
+        course_type,
+        major)
 
-    
+
 @app.route('/register_for_course', methods=['POST'])
 @login_required
 def register_for_course():
     data = request.get_json()
     course_id = data.get('course_id')
     print(f'course_id = {course_id}')
-    return courses.register_for_course(session['next_semester_id'], session['student_id'], course_id)
+    return courses.register_for_course(
+        session['next_semester_id'],
+        session['student_id'],
+        course_id)
 
 
 @app.route('/drop_course', methods=['POST'])
@@ -183,14 +207,20 @@ def register_for_course():
 def drop_course():
     data = request.get_json()
     course_id = data.get('course_id')
-    return courses.drop_course(session['next_semester_id'], session['student_id'], course_id)
+    return courses.drop_course(
+        session['next_semester_id'],
+        session['student_id'],
+        course_id)
 
 
 @app.route('/')
 @login_required
 def profile():
     user = users.find_user_by_username(session['username'])
-    return render_template('profile.html', user=user, selected_nav_link="profile")
+    return render_template(
+        'profile.html',
+        user=user,
+        selected_nav_link="profile")
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -221,12 +251,12 @@ def update_profile():
         # Handle specific database errors
         print(f"Database error: {db_err}")
         return jsonify({"error": "Database connection error"}), 500
-    
+
     except KeyError as key_err:
         # Handle missing data in the request JSON
         print(f"Key error: {key_err}")
         return jsonify({"error": f"Missing key: {str(key_err)}"}), 400
-    
+
     except Exception as ex:
         # Catch all other exceptions
         print(f"An error occurred: {ex}")

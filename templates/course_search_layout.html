@@ -159,6 +159,9 @@
             cursor: pointer;
             font-size: 16px;
         }
+        .course-item button.secondary {
+            background-color: gray;
+        }
     </style>
 </head>
 <body>
@@ -311,14 +314,17 @@
             data: JSON.stringify(data),
             success: function(course) {
                 console.log(course)
-                alert(`Successfully registered for ${course.course_name}`)
                 jQuery('#course_' + course_id).prop('disabled', true);
                 jQuery('#course_' + course_id).removeAttr("onclick");;
                 jQuery('#course_' + course_id).text('Registered');
                 jQuery('#course_' + course_id).addClass('registered');
-
+                jQuery('#course_' + course_id).addClass('secondary');
                 completedCreditsArray[course.course_type - 1] += course.credits
                 updateProgressBar(course.course_type)
+
+                setTimeout(() => {
+                    alert(`Successfully registered for ${course.course_name}`)
+                }, 250);
             },
             error: function(xhr, status, error) {
                 // Handle error response

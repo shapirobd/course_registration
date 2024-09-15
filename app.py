@@ -245,7 +245,7 @@ def update_profile():
         # Add the new user to the database
         users.update_user(user_data)
 
-        return redirect('/')
+        return jsonify({"message": "Profile updated successfully"}), 200
 
     except mysql.connector.Error as db_err:
         # Handle specific database errors

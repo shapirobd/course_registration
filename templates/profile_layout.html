@@ -27,7 +27,7 @@
 
         footer {
             text-align: center;
-            padding: 15px;
+            padding: px;
             background-color: #007bff;
             color: white;
             margin-top: auto;
@@ -164,7 +164,7 @@
     <div class="main-content">
     <h2>{{ user.first_name }} {{ user.last_name }}'s Profile</h2>
 
-    <form method="POST" action="/update_profile">
+    <form id="profile-form">
         <!-- Username (locked/uneditable) -->
         <div class="field-single">
             <label for="username">Username:</label>
@@ -233,6 +233,31 @@
         Shapiro, Brian / Murray, Brian / Angelozzi, Brian / Beatty, Sidney
     </div>
 </footer> #}
+
+<script>
+    // Handle form submission using AJAX
+    $('#profile-form').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Gather form data
+        var formData = $(this).serialize();
+
+        // Send form data using AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/update_profile', // The URL to send data to
+            data: formData,
+            success: function(response) {
+                // Show success toast
+                toastr.success(response.message, 'Success');
+            },
+            error: function(xhr, status, error) {
+                // Show error toast
+                toastr.error('There was an error updating the profile.', 'Error');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

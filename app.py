@@ -205,13 +205,27 @@ def register_for_course():
 @app.route('/drop_course', methods=['POST'])
 @login_required
 def drop_course():
-    data = request.get_json()
-    course_id = data.get('course_id')
-    return courses.drop_course(
-        session['next_semester_id'],
-        session['student_id'],
-        course_id)
+    try:
+        data = request.get_json()
+        course_id = data.get('course_id')
+        return courses.drop_course(
+            session['next_semester_id'],
+            session['student_id'],
+            course_id)
 
+    except mysql.connector.Error as db_err:
+        print(f"Database error: {db_err}")
+        return jsonify({"error": f"Database error: {db_err}"}), 400
+
+    except KeyError as key_err:
+        # Handle missing data in the request JSON
+        print(f"Key error: {key_err}")
+        return jsonify({"error": f"Missing key: {str(key_err)}"}), 400
+
+    except Exception as ex:
+        # Catch all other exceptions
+        print(f"An error occurred: {ex}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
 @app.route('/')
 @login_required
@@ -245,7 +259,7 @@ def update_profile():
         # Add the new user to the database
         users.update_user(user_data)
 
-        return jsonify({"message": "Profile updated successfully"}), 200
+        return jsonify({"message": "Profile updated"}), 200
 
     except mysql.connector.Error as db_err:
         # Handle specific database errors

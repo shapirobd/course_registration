@@ -323,7 +323,7 @@
                 completedCreditsArray[course.course_type - 1] += course.credits
                 updateProgressBar(course.course_type)
 
-                toastr.success(`Successfully registered for ${course.course_name}`, 'Success');
+                toastr.success(`Registered for ${course.course_name}`, 'Success');
             },
             error: function(xhr, status, error) {
                 // Handle error response

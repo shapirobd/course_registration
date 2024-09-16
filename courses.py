@@ -185,26 +185,19 @@ def register_for_course(semester_id, student_id, course_id):
 # drop a single course
 def drop_course(semester_id, student_id, course_id):
     course = None
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
 
-        cursor.execute(
-            "SELECT * FROM courses WHERE id = %(course_id)s", {'course_id': course_id})
-        course = cursor.fetchone()
+    cursor.execute(
+        "SELECT * FROM courses WHERE id = %(course_id)s", {'course_id': course_id})
+    course = cursor.fetchone()
 
-        cursor.execute(
-            "DELETE FROM student_courses WHERE (student_id = %(student_id)s AND course_id = %(course_id)s AND semester_id = %(semester_id)s)", {
-                'student_id': student_id, 'course_id': course_id, 'semester_id': semester_id})
-        connection.commit()
-        cursor.close()
-        connection.close()
-    except mysql.connector.Error as db_err:
-        print(f"Database error: {db_err}")
-        return f"Database error: {db_err}"
-    finally:
-        cursor.close()
-        connection.close()
+    cursor.execute(
+        "DELETE FROM student_courses WHERE (student_id = %(student_id)s AND course_id = %(course_id)s AND semester_id = %(semester_id)s)", {
+            'student_id': student_id, 'course_id': course_id, 'semester_id': semester_id})
+    connection.commit()
+    cursor.close()
+    connection.close()
     return course
 
 

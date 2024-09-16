@@ -201,12 +201,13 @@
             data: JSON.stringify(data),
             success: function(course) {
                 console.log(course)
-                alert(`Successfully dropped ${course.course_name}`)
+                toastr.success(`Dropped ${course.course_name}`, 'Success')
                 jQuery('#course_' + course_id).remove()
             },
             error: function(xhr, status, error) {
                 // Handle error response
-                $("#result").text("Error: " + error);
+                toastr.error(error, 'Error');
+                // $("#result").text("Error: " + error);
             }
         })
     }

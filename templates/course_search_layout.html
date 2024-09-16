@@ -297,7 +297,8 @@
             },
             error: function(xhr, status, error) {
                 // Handle error response
-                $("#result").text("Error: " + error);
+                toastr.error(error, 'Error');
+                // $("#result").text("Error: " + error);
             }
         })
     }
@@ -322,13 +323,12 @@
                 completedCreditsArray[course.course_type - 1] += course.credits
                 updateProgressBar(course.course_type)
 
-                setTimeout(() => {
-                    alert(`Successfully registered for ${course.course_name}`)
-                }, 250);
+                toastr.success(`Successfully registered for ${course.course_name}`, 'Success');
             },
             error: function(xhr, status, error) {
                 // Handle error response
-                $("#result").text("Error: " + error);
+                toastr.error(error, 'Error');
+                // $("#result").text("Error: " + error);
             }
         })
     }

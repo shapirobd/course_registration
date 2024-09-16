@@ -73,6 +73,15 @@ button.secondary:hover {
     background-color: #5a6268;
 }
 
+/* Navigation Button Styles */
+button.secondary-light {
+    background-color: #d3d3d3;
+}
+
+button.secondary-light:hover {
+    background-color: #c3c3c3;
+}
+
 .full-width {
   width: 100%;
 }

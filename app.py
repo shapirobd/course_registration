@@ -44,7 +44,7 @@ def doSignup():
             'last_name': request.form.get('last_name'),
             'major_id': request.form.get('major'),
             'email': request.form.get('email'),
-            'phone': request.form.get('phone'),
+            'phone': request.form.get('phone').replace('(', '').replace(')', '').replace('-', '').replace(' ', ''),
             'address': request.form.get('address'),
             'city': request.form.get('city'),
             'state': request.form.get('state'),
@@ -231,6 +231,7 @@ def drop_course():
 @login_required
 def profile():
     user = users.find_user_by_username(session['username'])
+    user['phone'] = users.format_phone_number(user['phone'])
     return render_template(
         'profile.html',
         user=user,
@@ -246,7 +247,7 @@ def update_profile():
             'first_name': request.form.get('first_name'),
             'last_name': request.form.get('last_name'),
             'email': request.form.get('email'),
-            'phone': request.form.get('phone'),
+            'phone': request.form.get('phone').replace('(', '').replace(')', '').replace('-', '').replace(' ', ''),
             'address': request.form.get('address'),
             'city': request.form.get('city'),
             'state': request.form.get('state'),
@@ -281,7 +282,7 @@ def update_profile():
 @login_required
 def logout():
     # Check if user is logged in
-    if 'username' in session and 'student_id' in session and 'next_semester_id' in session:
+    if 'username' in session or 'student_id' in session or 'next_semester_id' in session:
         session.pop('username', None)
         session.pop('student_id', None)
         session.pop('next_semester_id', None)

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Profile{% endblock %}</title>
+    <script src="{{ url_for('static', filename='js/profile.js') }}" defer></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +84,21 @@
         input[readonly] {
             background-color: #e9ecef;
         }
-
+        select {
+            width: 100% !important;
+            height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 6px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.875em; /* Adjust size as needed */
+            margin-bottom: 0.75em;
+        }
         .field-group {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -116,12 +131,14 @@
             margin-bottom: 15px;
         }
 */
-        .field-single input {
+        .field-single input,
+        .field-single select {
             width: calc(100% - 20px); /* Adjust width for full form space */
             margin-top: 5px;
         }
 
-        .field-group .field-single input {
+        .field-group .field-single input,
+        .field-group .field-single select {
             width: 90%; /* Adjust width for full form space */
         }
 
@@ -142,7 +159,8 @@
                 flex-direction: column;
             }
 
-            input {
+            input,
+            select {
                 width: 100%;
             }
 
@@ -192,7 +210,7 @@
         <!-- Phone -->
         <div class="field-single">
             <label for="phone">Phone:</label>
-            <input type="text" id="phone" name="phone" value="{{ user.phone }}">
+            <input type="text" id="phone" name="phone" value="{{ user.phone }}" required>
         </div>
 
         <!-- Address, City, State -->
@@ -207,14 +225,67 @@
             </div>
             <div class="field-single">
                 <label for="state">State:</label>
-                <input type="text" id="state" name="state" value="{{ user.state }}">
+                <div>
+                    <select id="state" name="state">
+                        <option value="">Select a state</option>
+                        <option value="AL" {% if user.state == "AL" %}selected{% endif %}>Alabama</option>
+                        <option value="AK" {% if user.state == "AK" %}selected{% endif %}>Alaska</option>
+                        <option value="AZ" {% if user.state == "AZ" %}selected{% endif %}>Arizona</option>
+                        <option value="AR" {% if user.state == "AR" %}selected{% endif %}>Arkansas</option>
+                        <option value="CA" {% if user.state == "CA" %}selected{% endif %}>California</option>
+                        <option value="CO" {% if user.state == "CO" %}selected{% endif %}>Colorado</option>
+                        <option value="CT" {% if user.state == "CT" %}selected{% endif %}>Connecticut</option>
+                        <option value="DE" {% if user.state == "DE" %}selected{% endif %}>Delaware</option>
+                        <option value="FL" {% if user.state == "FL" %}selected{% endif %}>Florida</option>
+                        <option value="GA" {% if user.state == "GA" %}selected{% endif %}>Georgia</option>
+                        <option value="HI" {% if user.state == "HI" %}selected{% endif %}>Hawaii</option>
+                        <option value="ID" {% if user.state == "ID" %}selected{% endif %}>Idaho</option>
+                        <option value="IL" {% if user.state == "IL" %}selected{% endif %}>Illinois</option>
+                        <option value="IN" {% if user.state == "IN" %}selected{% endif %}>Indiana</option>
+                        <option value="IA" {% if user.state == "IA" %}selected{% endif %}>Iowa</option>
+                        <option value="KS" {% if user.state == "KS" %}selected{% endif %}>Kansas</option>
+                        <option value="KY" {% if user.state == "KY" %}selected{% endif %}>Kentucky</option>
+                        <option value="LA" {% if user.state == "LA" %}selected{% endif %}>Louisiana</option>
+                        <option value="ME" {% if user.state == "ME" %}selected{% endif %}>Maine</option>
+                        <option value="MD" {% if user.state == "MD" %}selected{% endif %}>Maryland</option>
+                        <option value="MA" {% if user.state == "MA" %}selected{% endif %}>Massachusetts</option>
+                        <option value="MI" {% if user.state == "MI" %}selected{% endif %}>Michigan</option>
+                        <option value="MN" {% if user.state == "MN" %}selected{% endif %}>Minnesota</option>
+                        <option value="MS" {% if user.state == "MS" %}selected{% endif %}>Mississippi</option>
+                        <option value="MO" {% if user.state == "MO" %}selected{% endif %}>Missouri</option>
+                        <option value="MT" {% if user.state == "MT" %}selected{% endif %}>Montana</option>
+                        <option value="NE" {% if user.state == "NE" %}selected{% endif %}>Nebraska</option>
+                        <option value="NV" {% if user.state == "NV" %}selected{% endif %}>Nevada</option>
+                        <option value="NH" {% if user.state == "NH" %}selected{% endif %}>New Hampshire</option>
+                        <option value="NJ" {% if user.state == "NJ" %}selected{% endif %}>New Jersey</option>
+                        <option value="NM" {% if user.state == "NM" %}selected{% endif %}>New Mexico</option>
+                        <option value="NY" {% if user.state == "NY" %}selected{% endif %}>New York</option>
+                        <option value="NC" {% if user.state == "NC" %}selected{% endif %}>North Carolina</option>
+                        <option value="ND" {% if user.state == "ND" %}selected{% endif %}>North Dakota</option>
+                        <option value="OH" {% if user.state == "OH" %}selected{% endif %}>Ohio</option>
+                        <option value="OK" {% if user.state == "OK" %}selected{% endif %}>Oklahoma</option>
+                        <option value="OR" {% if user.state == "OR" %}selected{% endif %}>Oregon</option>
+                        <option value="PA" {% if user.state == "PA" %}selected{% endif %}>Pennsylvania</option>
+                        <option value="RI" {% if user.state == "RI" %}selected{% endif %}>Rhode Island</option>
+                        <option value="SC" {% if user.state == "SC" %}selected{% endif %}>South Carolina</option>
+                        <option value="SD" {% if user.state == "SD" %}selected{% endif %}>South Dakota</option>
+                        <option value="TN" {% if user.state == "TN" %}selected{% endif %}>Tennessee</option>
+                        <option value="TX" {% if user.state == "TX" %}selected{% endif %}>Texas</option>
+                        <option value="UT" {% if user.state == "UT" %}selected{% endif %}>Utah</option>
+                        <option value="VT" {% if user.state == "VT" %}selected{% endif %}>Vermont</option>
+                        <option value="VA" {% if user.state == "VA" %}selected{% endif %}>Virginia</option>
+                        <option value="WA" {% if user.state == "WA" %}selected{% endif %}>Washington</option>
+                        <option value="WV" {% if user.state == "WV" %}selected{% endif %}>West Virginia</option>
+                        <option value="WI" {% if user.state == "WI" %}selected{% endif %}>Wisconsin</option>
+                        <option value="WY" {% if user.state == "WY" %}selected{% endif %}>Wyoming</option>
+                    </select>
+                </div>
             </div>
-        </div>
-
-        <!-- Zip Code -->
-        <div class="field-single">
-            <label for="zip_code">Zip Code:</label>
-            <input type="text" id="zip_code" name="zip_code" value="{{ user.zip_code }}">
+            <!-- Zip Code -->
+            <div class="field-single">
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" value="{{ user.zip_code }}">
+            </div>
         </div>
 
         <!-- Change Password -->
@@ -233,31 +304,6 @@
         Shapiro, Brian / Murray, Brian / Angelozzi, Brian / Beatty, Sidney
     </div>
 </footer> #}
-
-<script>
-    // Handle form submission using AJAX
-    $('#profile-form').on('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        // Gather form data
-        var formData = $(this).serialize();
-
-        // Send form data using AJAX
-        $.ajax({
-            type: 'POST',
-            url: '/update_profile', // The URL to send data to
-            data: formData,
-            success: function(response) {
-                // Show success toast
-                toastr.success(response.message, 'Success');
-            },
-            error: function(xhr, status, error) {
-                // Show error toast
-                toastr.error('There was an error updating the profile.', 'Error');
-            }
-        });
-    });
-</script>
 
 </body>
 </html>

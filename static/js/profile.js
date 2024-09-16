@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	const form = document.querySelector("form");
 
-	form.addEventListener("submit", function (event) {
+	$("#profile-form").on("submit", function (event) {
 		// Clear previous error messages
 		document
 			.querySelectorAll(".error-message")
@@ -11,10 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		// Get form values
 		const username = document.getElementById("username").value.trim();
-		const password = document.getElementById("password").value.trim();
 		const firstName = document.getElementById("first_name").value.trim();
 		const lastName = document.getElementById("last_name").value.trim();
-		const major = document.getElementById("major").value.trim();
 		const email = document.getElementById("email").value.trim();
 		const phone = document.getElementById("phone").value.trim();
 		const address = document.getElementById("address").value.trim();
@@ -25,12 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Username validation
 		if (username.length < 5 || username.length > 20) {
 			displayError("username", "Username must be between 5 and 20 characters.");
-			isValid = false;
-		}
-
-		// Password validation
-		if (password.length < 8) {
-			displayError("password", "Password must be at least 8 characters.");
 			isValid = false;
 		}
 
@@ -82,8 +74,25 @@ document.addEventListener("DOMContentLoaded", function () {
 			isValid = false;
 		}
 
-		if (!isValid) {
-			event.preventDefault(); // Prevent form from submitting if validation fails
+		event.preventDefault(); // Prevent form from submitting if validation fails
+
+		if (isValid) {
+			// Gather form data
+			var formData = $(this).serialize();
+
+			$.ajax({
+				type: "POST",
+				url: "/update_profile", // The URL to send data to
+				data: formData,
+				success: function (response) {
+					// Show success toast
+					toastr.success(response.message, "Success");
+				},
+				error: function (xhr, status, error) {
+					// Show error toast
+					toastr.error("There was an error updating the profile.", "Error");
+				},
+			});
 		}
 	});
 
@@ -108,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		return re.test(email);
 	}
 
-  document.getElementById("phone").addEventListener("input", function (e) {
+	document.getElementById("phone").addEventListener("input", function (e) {
 		let input = e.target.value.replace(/\D/g, ""); // Remove all non-digit characters
 		if (input.length > 10) {
 			input = input.substring(0, 10); // Limit input to 10 digits
